@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:actual/common/common/custom_text_form_field.dart';
 import 'package:actual/common/const/colors.dart';
@@ -22,14 +21,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ip = Platform.isAndroid ? '10.0.2.2:3000' : '127.0.0.1:3000';
     final dio = Dio(
       BaseOptions(
         baseUrl: 'http://$ip',
       ),
     );
-    // '10.0.2.2' > emulator IP (android)
-    // '127.0.0.1' > simulator (ios)
 
     return DefaultLayout(
       child: SingleChildScrollView(
@@ -101,19 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () async {
-                    final resp = await dio.post(
-                      '/auth/token',
-                      options: Options(
-                        headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization':
-                              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTczNjgzODc0OSwiZXhwIjoxNzM2OTI1MTQ5fQ.hQvFPZWGGIvdWrUB-Dy3wQOSEOGSSTOhhu0o-EcU-5U',
-                        },
-                      ),
-                    );
-                    print(resp.data);
-                  },
+                  onPressed: () async {},
                   child: const Text('회원가입'),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.black,

@@ -1,51 +1,127 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:actual/common/common/custom_text_form_field.dart';
 import 'package:actual/common/const/colors.dart';
+import 'package:actual/common/const/data.dart';
 import 'package:actual/common/layout/default_layout.dart';
+import 'package:actual/common/view/root_tab.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String username = '';
+  String password = '';
+
+  @override
   Widget build(BuildContext context) {
+    final ip = Platform.isAndroid ? '10.0.2.2:3000' : '127.0.0.1:3000';
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: 'http://$ip',
+      ),
+    );
+    // '10.0.2.2' > emulator IP (android)
+    // '127.0.0.1' > simulator (ios)
+
     return DefaultLayout(
-      child: SafeArea(
-        top: true,
-        bottom: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _Title(),
-            _SubTitle(),
-            Image.asset(
-              'asset/img/misc/logo.png',
-              width: MediaQuery.of(context).size.width / 3 * 2,
+      child: SingleChildScrollView(
+        // drag 하면 키보드 닫기
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: SafeArea(
+          top: true,
+          bottom: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _Title(),
+                const SizedBox(height: 16.0),
+                _SubTitle(),
+                Image.asset(
+                  'asset/img/misc/logo.png',
+                  width: MediaQuery.of(context).size.width / 3 * 2,
+                ),
+                const SizedBox(height: 16.0),
+                CustomTextFormField(
+                  hintText: '이메일을 입력해주세요',
+                  onChanged: (String value) {
+                    username = value;
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                CustomTextFormField(
+                  hintText: '비밀번호를 입력해주세요',
+                  onChanged: (String value) {
+                    password = value;
+                  },
+                  obscureText: true,
+                ),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () async {
+                    final rawString = '$username:$password';
+                    // 일반 스트링을 base64로 인코딩
+                    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+                    final token = stringToBase64.encode(rawString);
+
+                    final resp = await dio.post(
+                      '/auth/login',
+                      options: Options(
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': 'Basic $token',
+                        },
+                      ),
+                    );
+
+                    final refreshToken = resp.data['refreshToken'];
+                    final accessToken = resp.data['accessToken'];
+                    await storage.write(
+                        key: REFRESH_TOKEN_KEY, value: refreshToken);
+                    await storage.write(
+                        key: ACCESS_TOKEN_KEY, value: accessToken);
+
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => RootTab()),
+                    );
+                  },
+                  child: const Text('로그인'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: PRIMARY_COLOR,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    final resp = await dio.post(
+                      '/auth/token',
+                      options: Options(
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization':
+                              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTczNjgzODc0OSwiZXhwIjoxNzM2OTI1MTQ5fQ.hQvFPZWGGIvdWrUB-Dy3wQOSEOGSSTOhhu0o-EcU-5U',
+                        },
+                      ),
+                    );
+                    print(resp.data);
+                  },
+                  child: const Text('회원가입'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                  ),
+                ),
+              ],
             ),
-            CustomTextFormField(
-              hintText: '이메일을 입력해주세요',
-              onChanged: (String value) {},
-            ),
-            CustomTextFormField(
-              hintText: '비밀번호를 입력해주세요',
-              onChanged: (String value) {},
-              obscureText: true,
-            ),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('로그인'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: PRIMARY_COLOR,
-                foregroundColor: Colors.white,
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: const Text('회원가입'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

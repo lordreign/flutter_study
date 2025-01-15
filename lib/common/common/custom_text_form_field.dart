@@ -50,6 +50,7 @@ class CustomTextFormField extends StatelessWidget {
             color: PRIMARY_COLOR,
           ),
         ),
+        enabledBorder: baseBorder,
       ),
     );
   }

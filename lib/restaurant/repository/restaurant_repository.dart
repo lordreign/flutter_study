@@ -1,0 +1,31 @@
+import 'package:actual/common/model/cursor_pagination_model.dart';
+import 'package:actual/restaurant/model/restaurant_detail_model.dart';
+import 'package:actual/restaurant/model/restaurant_model.dart';
+import 'package:dio/dio.dart' hide Headers;
+import 'package:retrofit/http.dart';
+
+part 'restaurant_repository.g.dart';
+
+class ParseErrorLogger {
+  void logError(Object error, StackTrace stackTrace, RequestOptions options) {
+    // Implement your error logging logic here
+  }
+}
+
+@RestApi()
+abstract class RestaurantRepository {
+  factory RestaurantRepository(Dio dio,
+      {String baseUrl, ParseErrorLogger? errorLogger}) = _RestaurantRepository;
+
+  @GET('/restaurant')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<CursorPagination<RestaurantModel>> getRestaurants();
+
+  @GET('/restaurant/{id}')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<RestaurantDetailModel> getRestaurantDetail(@Path('id') String id);
+}

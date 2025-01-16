@@ -1,6 +1,8 @@
 import 'package:actual/common/const/data.dart';
+import 'package:actual/common/dio/dio.dart';
 import 'package:actual/restaurant/component/restaurant_card.dart';
 import 'package:actual/restaurant/model/restaurant_model.dart';
+import 'package:actual/restaurant/repository/restaurant_repository.dart';
 import 'package:actual/restaurant/view/restaurant_detail_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -8,25 +10,24 @@ import 'package:flutter/material.dart';
 class RestaurantScreen extends StatelessWidget {
   const RestaurantScreen({super.key});
 
-  Future<List> paginateRestaurant() async {
-    final dio = Dio(
-      BaseOptions(
-        baseUrl: 'http://$ip',
-      ),
-    );
+  Future<List<RestaurantModel>> paginateRestaurant() async {
+    final dio = Dio();
+    dio.interceptors.add(CustomInterceptor(storage: storage));
 
-    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
-    final resp = await dio.get(
-      '/restaurant',
-      options: Options(
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $accessToken',
-        },
-      ),
-    );
+    // final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+    // final resp = await dio.get(
+    //   '/restaurant',
+    //   options: Options(
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Authorization': 'Bearer $accessToken',
+    //     },
+    //   ),
+    // );
+    final resp =
+        await RestaurantRepository(dio, baseUrl: 'http://$ip').getRestaurants();
 
-    return resp.data['data'];
+    return resp.data;
   }
 
   @override
@@ -35,7 +36,7 @@ class RestaurantScreen extends StatelessWidget {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: FutureBuilder<List>(
+          child: FutureBuilder<List<RestaurantModel>>(
             future: paginateRestaurant(),
             builder: (context, snapshot) {
               if (!snapshot.hasData &&
@@ -46,14 +47,10 @@ class RestaurantScreen extends StatelessWidget {
                 return const Text('에러가 발생했습니다.');
               }
 
-              print(snapshot.error);
-              print(snapshot.data);
-
               return ListView.separated(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (_, index) {
-                  final parsedItem =
-                      RestaurantModel.fromJson(snapshot.data![index]);
+                  final parsedItem = snapshot.data![index];
 
                   return GestureDetector(
                     onTap: () {

@@ -33,10 +33,10 @@ class RestaurantDetailModel extends RestaurantModel {
 @JsonSerializable()
 class RestaurantProductModel {
   final String id;
+  final String name;
   @JsonKey(
     fromJson: DataUtils.pathToUrl,
   )
-  final String name;
   final String imgUrl;
   final String detail;
   final int price;

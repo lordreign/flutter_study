@@ -5,6 +5,7 @@ class DefaultLayout extends StatelessWidget {
   final Widget child;
   final String? title;
   final Widget? bottomNavigationBar;
+  final bool automaticallyImplyLeading;
 
   const DefaultLayout({
     super.key,
@@ -12,6 +13,7 @@ class DefaultLayout extends StatelessWidget {
     this.title,
     this.bottomNavigationBar,
     this.backgroundColor = Colors.white,
+    this.automaticallyImplyLeading = false,
   });
 
   @override
@@ -30,7 +32,7 @@ class DefaultLayout extends StatelessWidget {
     }
     return AppBar(
       backgroundColor: Colors.white,
-      automaticallyImplyLeading: false,
+      automaticallyImplyLeading: automaticallyImplyLeading,
       title: Text(
         title!,
         style: const TextStyle(

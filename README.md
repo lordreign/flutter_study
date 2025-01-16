@@ -17,7 +17,16 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Generate code
 
+### build
+
 ```bash
 $ flutter pub run build_runner build
 $ fvm flutter pub run build_runner build
+```
+
+### watch
+
+```bash
+$ flutter pub run build_runner watch
+$ fvm flutter pub run build_runner watch
 ```

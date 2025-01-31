@@ -75,6 +75,7 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => RestaurantDetailScreen(
+                          // id: '${parsedItem.id}1',
                           id: parsedItem.id,
                         ),
                       ),

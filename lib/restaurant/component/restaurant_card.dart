@@ -13,6 +13,7 @@ class RestaurantCard extends StatelessWidget {
   final double ratings;
   final bool isDetail;
   final String? detail;
+  final String? heroTag;
 
   const RestaurantCard({
     super.key,
@@ -25,6 +26,7 @@ class RestaurantCard extends StatelessWidget {
     required this.ratings,
     this.isDetail = false,
     this.detail,
+    this.heroTag,
   });
 
   factory RestaurantCard.fromModel({
@@ -46,6 +48,7 @@ class RestaurantCard extends StatelessWidget {
       detail: model is RestaurantDetailModel
           ? (model as RestaurantDetailModel).detail
           : null,
+      heroTag: model.id,
     );
   }
 
@@ -53,12 +56,18 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (isDetail) image,
-        if (!isDetail)
-          // image를 깎을때 사용
+        if (heroTag != null)
+          Hero(
+            tag: ObjectKey(heroTag),
+            child: ClipRRect(
+              child: image,
+              borderRadius: BorderRadius.circular(isDetail ? 0 : 12),
+            ),
+          ),
+        if (heroTag == null)
           ClipRRect(
             child: image,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(isDetail ? 0 : 12),
           ),
         const SizedBox(height: 16),
         Padding(

@@ -1,4 +1,5 @@
 import 'package:actual/common/model/cursor_pagination_model.dart';
+import 'package:actual/common/utils/pagination_utils.dart';
 import 'package:actual/restaurant/component/restaurant_card.dart';
 import 'package:actual/restaurant/provider/restaurant_provider.dart';
 import 'package:actual/restaurant/view/restaurant_detail_screen.dart';
@@ -23,18 +24,15 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
   }
 
   void scrollListener() {
-    if (_scrollController.offset >
-        _scrollController.position.maxScrollExtent - 300) {
-      ref.read(restaurantProvider.notifier).paginate(
-            fetchMore: true,
-          );
-    }
+    PaginationUtils.paginate(
+      scrollController: _scrollController,
+      provider: ref.read(restaurantProvider.notifier),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final data = ref.watch(restaurantProvider);
-    print(data);
     if (data is CursorPaginationLoading) {
       return const Center(
         child: CircularProgressIndicator(),

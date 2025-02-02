@@ -5,7 +5,7 @@ import 'package:actual/common/repository/base_pagination_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PaginationProvider<T extends IModelWithId,
-        U extends IBasePaginationRepository>
+        U extends IBasePaginationRepository<T>>
     extends StateNotifier<CursorPaginationBase> {
   U repository;
 
@@ -59,7 +59,7 @@ class PaginationProvider<T extends IModelWithId,
       // fetchMore = true
       if (fetchMore) {
         final cpState = state as CursorPagination<T>;
-        state = CursorPaginationFetchingMore(
+        state = CursorPaginationFetchingMore<T>(
           meta: cpState.meta,
           data: cpState.data,
         );
@@ -99,7 +99,9 @@ class PaginationProvider<T extends IModelWithId,
         // refetch나 loading일 경우
         state = resp;
       }
-    } catch (e) {
+    } catch (e, stack) {
+      print(e);
+      print(stack);
       state = CursorPaginationError(
         message: '데이터를 가져오지 못했습니다.',
       );

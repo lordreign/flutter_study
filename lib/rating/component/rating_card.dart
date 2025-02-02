@@ -1,4 +1,5 @@
 import 'package:actual/common/const/colors.dart';
+import 'package:actual/rating/model/rating_model.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,16 @@ class RatingCard extends StatelessWidget {
     this.images = const [],
   });
 
+  factory RatingCard.fromModel(RatingModel model) {
+    return RatingCard(
+      avatarImage: NetworkImage(model.user.imageUrl),
+      rating: model.rating,
+      email: model.user.username,
+      content: model.content,
+      images: model.imgUrls.map((e) => Image.network(e)).toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,6 +44,7 @@ class RatingCard extends StatelessWidget {
         ),
         if (images.length > 0)
           SizedBox(
+            height: 130,
             child: _Images(
               images: images,
             ),
@@ -115,20 +127,23 @@ class _Images extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      scrollDirection: Axis.horizontal,
-      children: images
-          .mapIndexed(
-            (index, e) => Padding(
-              padding:
-                  EdgeInsets.only(right: index == images.length - 1 ? 0 : 16.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: e,
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: images
+            .mapIndexed(
+              (index, e) => Padding(
+                padding: EdgeInsets.only(
+                    right: index == images.length - 1 ? 0 : 16.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: e,
+                ),
               ),
-            ),
-          )
-          .toList(),
+            )
+            .toList(),
+      ),
     );
   }
 }

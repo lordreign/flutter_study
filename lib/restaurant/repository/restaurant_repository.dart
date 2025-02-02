@@ -1,4 +1,5 @@
 import 'package:actual/common/dio/dio.dart';
+import 'package:actual/common/logger/parse_error_logger.dart';
 import 'package:actual/common/model/cursor_pagination_model.dart';
 import 'package:actual/common/model/pagination_params.dart';
 import 'package:actual/common/repository/base_pagination_repository.dart';
@@ -17,12 +18,6 @@ final restaurantRepositoryProvider = Provider<RestaurantRepository>(
     return RestaurantRepository(dio);
   },
 );
-
-class ParseErrorLogger {
-  void logError(Object error, StackTrace stackTrace, RequestOptions options) {
-    // Implement your error logging logic here
-  }
-}
 
 @RestApi()
 abstract class RestaurantRepository

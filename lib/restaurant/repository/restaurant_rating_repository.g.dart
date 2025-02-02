@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'restaurant_repository.dart';
+part of 'restaurant_rating_repository.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'restaurant_repository.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
-class _RestaurantRepository implements RestaurantRepository {
-  _RestaurantRepository(
+class _RestaurantRatingRepository implements RestaurantRatingRepository {
+  _RestaurantRatingRepository(
     this._dio, {
     this.baseUrl,
     this.errorLogger,
@@ -22,7 +22,7 @@ class _RestaurantRepository implements RestaurantRepository {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<CursorPagination<RestaurantModel>> paginate(
+  Future<CursorPagination<RatingModel>> paginate(
       {PaginationParams? paginationParams = const PaginationParams()}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -31,14 +31,14 @@ class _RestaurantRepository implements RestaurantRepository {
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<CursorPagination<RestaurantModel>>(Options(
+    final _options = _setStreamType<CursorPagination<RatingModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/restaurant',
+          '/rating',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -48,46 +48,12 @@ class _RestaurantRepository implements RestaurantRepository {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late CursorPagination<RestaurantModel> _value;
+    late CursorPagination<RatingModel> _value;
     try {
-      _value = CursorPagination<RestaurantModel>.fromJson(
+      _value = CursorPagination<RatingModel>.fromJson(
         _result.data!,
-        (json) => RestaurantModel.fromJson(json as Map<String, dynamic>),
+        (json) => RatingModel.fromJson(json as Map<String, dynamic>),
       );
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<RestaurantDetailModel> getRestaurantDetail(String id) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'accessToken': 'true'};
-    _headers.removeWhere((k, v) => v == null);
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<RestaurantDetailModel>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/restaurant/${id}',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late RestaurantDetailModel _value;
-    try {
-      _value = RestaurantDetailModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

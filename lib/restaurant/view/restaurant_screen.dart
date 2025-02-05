@@ -8,21 +8,22 @@ class RestaurantScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PaginationListView(
-        provider: restaurantProvider,
-        itemBuilder: <RestaurantModel>(context, index, model) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => RestaurantDetailScreen(
-                    // id: '${parsedItem.id}1',
-                    id: model.id,
-                  ),
+      provider: restaurantProvider,
+      itemBuilder: <RestaurantModel>(context, index, model) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => RestaurantDetailScreen(
+                  // id: '${parsedItem.id}1',
+                  id: model.id,
                 ),
-              );
-            },
-            child: RestaurantCard.fromModel(model: model),
-          );
-        });
+              ),
+            );
+          },
+          child: RestaurantCard.fromModel(model: model),
+        );
+      },
+    );
   }
 }

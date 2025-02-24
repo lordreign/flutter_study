@@ -84,28 +84,37 @@ class _PaginationListViewState<T extends IModelWithId>
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: ListView.separated(
-        controller: _scrollController,
-        itemCount: cp.data.length + 1,
-        itemBuilder: (_, index) {
-          if (index == cp.data.length) {
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Center(
-                child: cp is CursorPaginationFetchingMore
-                    ? CircularProgressIndicator()
-                    : Text(''),
-              ),
-            );
-          }
-
-          final parsedItem = cp.data[index];
-
-          return widget.itemBuilder(context, index, parsedItem);
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref.read(widget.provider.notifier).paginate(
+                forceRefetch: true,
+              );
         },
-        separatorBuilder: (_, index) {
-          return const SizedBox(height: 16);
-        },
+        child: ListView.separated(
+          physics: AlwaysScrollableScrollPhysics(),
+          // 항상 스크롤되게
+          controller: _scrollController,
+          itemCount: cp.data.length + 1,
+          itemBuilder: (_, index) {
+            if (index == cp.data.length) {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Center(
+                  child: cp is CursorPaginationFetchingMore
+                      ? CircularProgressIndicator()
+                      : Text(''),
+                ),
+              );
+            }
+
+            final parsedItem = cp.data[index];
+
+            return widget.itemBuilder(context, index, parsedItem);
+          },
+          separatorBuilder: (_, index) {
+            return const SizedBox(height: 16);
+          },
+        ),
       ),
     );
   }

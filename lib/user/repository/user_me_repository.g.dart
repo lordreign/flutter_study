@@ -94,13 +94,13 @@ class _UserMeRepository implements UserMeRepository {
 
   @override
   Future<List<BasketItemModel>> patchBasket(
-      {required PatchBasketBody basketItems}) async {
+      {required PatchBasketBody body}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(basketItems.toJson());
+    _data.addAll(body.toJson());
     final _options = _setStreamType<List<BasketItemModel>>(Options(
       method: 'PATCH',
       headers: _headers,

@@ -35,6 +35,6 @@ abstract class UserMeRepository {
     'accessToken': 'true',
   })
   Future<List<BasketItemModel>> patchBasket({
-    @Body() required PatchBasketBody basketItems,
+    @Body() required PatchBasketBody body,
   });
 }

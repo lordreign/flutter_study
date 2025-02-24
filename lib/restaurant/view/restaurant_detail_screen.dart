@@ -15,6 +15,7 @@ import 'package:actual/user/provider/basket_provider.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart' hide Badge;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
@@ -69,7 +70,7 @@ class _RestaurantDetailScreenState
       floatingActionButton: FloatingActionButton(
         backgroundColor: PRIMARY_COLOR,
         onPressed: () {
-          Navigator.of(context).pushNamed('/basket');
+          context.push('/basket');
         },
         child: Badge(
           showBadge: basketState.isNotEmpty,
